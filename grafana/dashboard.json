@@ -1,0 +1,65 @@
+{
+  "title": "Kafka & JVM 모니터링",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Consumer Lag",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "kafka_consumergroup_lag{consumergroup=\"analysis_server_consumer_01\"}",
+          "legendFormat": "lag"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "JVM Heap 사용량 (MB)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(jvm_memory_used_bytes{area=\"heap\"}) / 1024 / 1024",
+          "legendFormat": "heap used (MB)"
+        },
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(jvm_memory_max_bytes{area=\"heap\", id=\"G1 Old Gen\"}) / 1024 / 1024",
+          "legendFormat": "heap max (MB)"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "메시지 처리 속도 (건/분)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "increase(spring_kafka_listener_seconds_count[1m])",
+          "legendFormat": "처리 건수/분"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "메시지 처리 평균 시간 (ms)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "rate(spring_kafka_listener_seconds_sum[1m]) / rate(spring_kafka_listener_seconds_count[1m]) * 1000",
+          "legendFormat": "avg 처리시간 (ms)"
+        }
+      ]
+    }
+  ],
+  "refresh": "5s",
+  "time": { "from": "now-5m", "to": "now" },
+  "schemaVersion": 38
+}
