@@ -40,7 +40,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "increase(spring_kafka_listener_seconds_count[1m])",
+          "expr": "increase(kafka_messages_processed_total[1m])",
           "legendFormat": "처리 건수/분"
         }
       ]
@@ -53,7 +53,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "rate(spring_kafka_listener_seconds_sum[1m]) / rate(spring_kafka_listener_seconds_count[1m]) * 1000",
+          "expr": "sum(increase(spring_kafka_listener_seconds_sum[1m])) / increase(kafka_messages_processed_total[1m]) * 1000",
           "legendFormat": "avg 처리시간 (ms)"
         }
       ]
